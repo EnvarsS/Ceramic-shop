@@ -1,0 +1,20 @@
+# Java
+target/
+*.class
+
+# IntelliJ
+event-service/.idea/
+*.iml
+.gitignore
+.idea
+
+# Maven
+.mvn/
+!mvnw
+!mvnw.cmd
+
+# Logs
+*.log
+
+# Spring Boot
+HELP.md
