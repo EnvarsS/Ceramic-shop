@@ -1,5 +1,5 @@
 -- Liquibase formatted SQL
--- changeset envars:001
+-- changeset envars:003
 
 INSERT INTO roles (id, name) VALUES
 (1, 'ROLE_USER'),
