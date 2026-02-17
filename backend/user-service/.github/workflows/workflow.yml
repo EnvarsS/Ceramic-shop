@@ -22,6 +22,7 @@ jobs:
         run: mvn clean test
 
   integrational-test:
+    needs: unit-tests
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +40,6 @@ jobs:
         run: mvn clean verify
 
   build:
-    if: github.base_ref == 'main'
     needs: integrational-test
     runs-on: ubuntu-latest
 
