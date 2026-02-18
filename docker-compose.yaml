@@ -19,6 +19,8 @@ services:
     restart: always
     build: /backend/user-service
     container_name: user-service
+    ports:
+      - "4011:4011"
 
 volumes:
   user-db-data:
