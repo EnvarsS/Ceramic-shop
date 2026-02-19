@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/roles")
 @RequiredArgsConstructor
+@RequestMapping("/roles")
 @Tag(name = "Role API", description = "Role management operations")
 public class RoleController {
 

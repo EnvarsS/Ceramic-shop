@@ -26,11 +26,11 @@ public class UserService {
     private final RoleService roleService;
 
     @Transactional
-    public UserResponseDto createUser(CreateUserRequestDto user) {
-        isEmailTaken(user.getEmail());
-        isUsernameTaken(user.getUsername());
+    public UserResponseDto createUser(CreateUserRequestDto createUser) {
+        isEmailTaken(createUser.getEmail());
+        isUsernameTaken(createUser.getUsername());
 
-        User newUser = modelMapper.map(user, User.class);
+        User newUser = modelMapper.map(createUser, User.class);
         newUser.setRole(roleService.getUserRole());
 
         return modelMapper.map(userRepository.save(newUser), UserResponseDto.class);
