@@ -1,6 +1,7 @@
 package org.envycorp.userservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.envycorp.userservice.exception.role.RoleIsAlreadyExisted;
 import org.envycorp.userservice.exception.role.RoleNotFoundException;
 import org.envycorp.userservice.model.dto.request.CreateRoleRequestDto;
 import org.envycorp.userservice.model.dto.response.RoleResponseDto;
@@ -18,11 +19,11 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
 
-    protected Role getUserRole() {
+    public Role getUserRole() {
         return roleRepository.findByName("ROLE_USER");
     }
 
-    protected Role findRoleById(Long id) {
+    public Role findRoleById(Long id) {
         return roleRepository.findById(id)
                 .orElseThrow(() -> new RoleNotFoundException("Role not found with id: " + id));
     }
@@ -42,7 +43,7 @@ public class RoleService {
     @Transactional
     public RoleResponseDto createRole(CreateRoleRequestDto createRole) {
         if(roleRepository.existsByName(createRole.getName())) {
-            throw new RoleNotFoundException("Role with name " + createRole.getName() + " already exists");
+            throw new RoleIsAlreadyExisted("Role with name " + createRole.getName() + " already exists");
         }
 
         Role newRole = modelMapper.map(createRole, Role.class);
