@@ -16,11 +16,19 @@ services:
   user-service:
     depends_on:
       - user-db
+      - discovery-service
     restart: always
     build: /backend/user-service
     container_name: user-service
     ports:
       - "4011:4011"
+
+  discovery-service:
+    restart: always
+    build: /backend/discovery-service
+    container_name: discovery-service
+    ports:
+      - "4050:4050"
 
 volumes:
   user-db-data:
