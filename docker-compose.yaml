@@ -20,15 +20,21 @@ services:
     restart: always
     build: /backend/user-service
     container_name: user-service
-    ports:
-      - "4011:4011"
 
   discovery-service:
     restart: always
     build: /backend/discovery-service
     container_name: discovery-service
+
+  api-gateway:
+    depends_on:
+      - discovery-service
+    restart: always
+    build: /backend/api-gateway
+    container_name: api-gateway
     ports:
-      - "4050:4050"
+      - "4020:4020"
+
 
 volumes:
   user-db-data:
