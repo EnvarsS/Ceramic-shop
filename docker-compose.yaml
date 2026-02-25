@@ -13,6 +13,18 @@ services:
     volumes:
         - user-db-data:/var/lib/postgresql/data
 
+  auth-db:
+    image: postgres:alpine
+    container_name: ceramic-auth-db
+    environment:
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: pass
+        POSTGRES_DB: auth_db
+    ports:
+        - "5433:5432"
+    volumes:
+        - auth-db-data:/var/lib/postgresql/data
+
   user-service:
     depends_on:
       - user-db
