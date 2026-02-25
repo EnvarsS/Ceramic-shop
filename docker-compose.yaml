@@ -5,25 +5,27 @@ services:
     image: postgres:alpine
     container_name: ceramic-user-db
     environment:
-        POSTGRES_USER: user
-        POSTGRES_PASSWORD: pass
-        POSTGRES_DB: user_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_ROOT_PASSWORD: pass
+      POSTGRES_DB: user_db
     ports:
-        - "5432:5432"
+      - "5432:5432"
     volumes:
-        - user-db-data:/var/lib/postgresql/data
+      - user-db-data:/var/lib/postgresql/data
 
   auth-db:
     image: postgres:alpine
     container_name: ceramic-auth-db
     environment:
-        POSTGRES_USER: user
-        POSTGRES_PASSWORD: pass
-        POSTGRES_DB: auth_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_ROOT_PASSWORD: pass
+      POSTGRES_DB: auth_db
     ports:
-        - "5433:5432"
+      - "5430:5432"
     volumes:
-        - auth-db-data:/var/lib/postgresql/data
+      - auth-db-data:/var/lib/postgresql/data
 
   user-service:
     depends_on:
@@ -32,6 +34,14 @@ services:
     restart: always
     build: /backend/user-service
     container_name: user-service
+
+  auth-service:
+    depends_on:
+      - auth-db
+      - discovery-service
+    restart: always
+    build: /backend/auth-service
+    container_name: auth-service
 
   discovery-service:
     restart: always
@@ -50,3 +60,4 @@ services:
 
 volumes:
   user-db-data:
+  auth-db-data:
