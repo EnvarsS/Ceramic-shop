@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [user-service, discovery-service, auth-service]
+        service: [user-service]
     defaults:
       run:
         working-directory: backend/${{ matrix.service }}
