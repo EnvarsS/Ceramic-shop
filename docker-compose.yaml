@@ -7,7 +7,6 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
-      POSTGRES_ROOT_PASSWORD: pass
       POSTGRES_DB: user_db
     ports:
       - "5432:5432"
@@ -15,17 +14,17 @@ services:
       - user-db-data:/var/lib/postgresql/data
 
   auth-db:
-    image: postgres:alpine
+    image: mysql:latest
     container_name: ceramic-auth-db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_ROOT_PASSWORD: pass
-      POSTGRES_DB: auth_db
+        MYSQL_ROOT_PASSWORD: auth_pass
+        MYSQL_DATABASE: auth_db
+        MYSQL_USER: auth_user
+        MYSQL_PASSWORD: auth_pass
     ports:
-      - "5430:5432"
+      - "3306:3306"
     volumes:
-      - auth-db-data:/var/lib/postgresql/data
+      - auth-db-data:/var/lib/mysql
 
   user-service:
     depends_on:
