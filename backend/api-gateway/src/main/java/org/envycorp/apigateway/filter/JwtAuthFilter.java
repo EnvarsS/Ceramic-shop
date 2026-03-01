@@ -34,19 +34,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             Claims claims = jwtService.parseToken(token);
             String role = claims.get("role", String.class);
+            System.out.println("JwtAuthFilter: role = " + role);
             String username = claims.getSubject();
+            System.out.println("JwtAuthFilter: username = " + username);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority(role)));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
-            mutableRequest.putHeader("X-User-Id", claims.get("userId", String.class));
-            mutableRequest.putHeader("X-User-Role" , role);
-            mutableRequest.putHeader("X-User-Username", username);
+            request.setAttribute("X-User-Id", claims.get("userId", String.class));
+            request.setAttribute("X-User-Role", role);
+            request.setAttribute("X-User-Username", username);
 
-            filterChain.doFilter(mutableRequest, response);
+            filterChain.doFilter(request, response);
         }
         catch(JwtException jwtException){
             SecurityContextHolder.clearContext();
