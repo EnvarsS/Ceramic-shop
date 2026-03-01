@@ -60,4 +60,8 @@ public class AuthService {
         return jwtService.generateToken(userAuth);
     }
 
+    public List<UserAuth> getAllUsers() {
+        return authRepository.findAll();
+    }
+
 }
