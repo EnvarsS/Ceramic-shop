@@ -27,18 +27,4 @@ public class AuthController {
     public String login(@RequestBody UserAuthRequestDto user) {
         return authService.login(user);
     }
-
-    @GetMapping("/test1")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public List<UserAuth> test1() {
-        return authService.getAllUsers();
-    }
-
-    @GetMapping("/test2")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<UserAuth> test2() {
-        return authService.getAllUsers();
-    }
 }

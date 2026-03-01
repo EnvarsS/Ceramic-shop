@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -34,22 +34,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             Claims claims = jwtService.parseToken(token);
             String role = claims.get("role", String.class);
-            System.out.println("JwtAuthFilter: role = " + role);
             String username = claims.getSubject();
-            System.out.println("JwtAuthFilter: username = " + username);
+            Object userIdClaim = claims.get("userId");
+            String userId = userIdClaim != null ? String.valueOf(userIdClaim) : null;
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority(role)));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            request.setAttribute("X-User-Id", claims.get("userId", String.class));
-            request.setAttribute("X-User-Role", role);
-            request.setAttribute("X-User-Username", username);
+            MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
+            mutableRequest.putHeader("X-User-Id", userId);
+            mutableRequest.putHeader("X-User-Role", role);
+            mutableRequest.putHeader("X-User-Username", username);
 
-            filterChain.doFilter(request, response);
-        }
-        catch(JwtException jwtException){
+            filterChain.doFilter(mutableRequest, response);
+        } catch (Exception e) {
             SecurityContextHolder.clearContext();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }

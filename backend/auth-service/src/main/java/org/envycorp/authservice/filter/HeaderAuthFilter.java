@@ -18,9 +18,7 @@ public class HeaderAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String username = request.getHeader("X-User-Username");
-        System.out.println("HeaderAuthFilter: X-User-Username = " + username);
         String role = request.getHeader("X-User-Role");
-        System.out.println("HeaderAuthFilter: X-User-Role = " + role);
 
         if(username != null || role != null){
             UsernamePasswordAuthenticationToken token
