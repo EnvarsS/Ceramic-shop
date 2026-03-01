@@ -1,5 +1,6 @@
 package org.envycorp.authservice.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.envycorp.authservice.exception.IncorrectPasswordException;
 import org.envycorp.authservice.exception.UsernameIsAlreadyTaken;
@@ -22,10 +23,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public List<UserAuth> getUsers() {
-        return authRepository.findAll();
-    }
-
+    @PostConstruct
     public void changePasswords() {
         List<UserAuth> users = authRepository.findAll();
 
@@ -35,7 +33,6 @@ public class AuthService {
             authRepository.save(user);
         }
     }
-
 
     public String register(UserAuthRequestDto user) {
         Long userRoleId = 1L;
