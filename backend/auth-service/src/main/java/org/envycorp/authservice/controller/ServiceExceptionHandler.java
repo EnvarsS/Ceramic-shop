@@ -1,8 +1,6 @@
 package org.envycorp.authservice.controller;
 
-import org.envycorp.authservice.exception.IncorrectPasswordException;
-import org.envycorp.authservice.exception.UsernameIsAlreadyTaken;
-import org.envycorp.authservice.exception.UsernameNotExists;
+import org.envycorp.authservice.exception.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,7 +25,11 @@ public class ServiceExceptionHandler {
     @ExceptionHandler({
             IncorrectPasswordException.class,
             UsernameIsAlreadyTaken.class,
-            UsernameNotExists.class
+            UsernameNotExists.class,
+            NoPermissionError.class,
+            EmailIsAlreadyTaken.class,
+            UserNotFoundException.class,
+            NoPermissionError.class
     })
     public ResponseEntity<Map<String, String>> handleCustomExceptions(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
