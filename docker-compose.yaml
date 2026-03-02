@@ -55,7 +55,6 @@ services:
     container_name: api-gateway
     ports:
       - "4020:4020"
-      -
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
