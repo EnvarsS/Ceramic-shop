@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthEvent {
     private String type; // "REGISTERED", "DELETED", "UPDATED"
-    private Long authId;
+    private Long id;
     private String username;
     private String email;
 }
