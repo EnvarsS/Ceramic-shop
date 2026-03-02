@@ -61,6 +61,19 @@ public class AuthService {
         return jwtService.generateToken(savedUserAuth);
     }
 
+    @Transactional
+    public String login(UserLoginRequestDto user) {
+        if (!authRepository.existsUserAuthByUsername(user.getUsername())) {
+            throw new UsernameIsAlreadyTaken(user.getUsername() + " is not found");
+        }
+        UserAuth userAuth = authRepository.findByUsername(user.getUsername());
+        if (!bCryptPasswordEncoder.matches(user.getPassword(), userAuth.getPasswordHash())) {
+            throw new IncorrectPasswordException("Incorrect password");
+        }
+
+        return jwtService.generateToken(userAuth);
+    }
+
     public void deleteUser(Long id, String role, Long deleteId) {
         if (id.equals(deleteId) || role.equals("ROLE_ADMIN")) {
             authRepository.deleteById(deleteId);
