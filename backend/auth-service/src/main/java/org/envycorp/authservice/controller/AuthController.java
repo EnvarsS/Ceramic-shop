@@ -29,12 +29,6 @@ public class AuthController {
         return authService.login(user);
     }
 
-    @GetMapping("/users")
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserAuth> getAllUsers() {
-        return authService.getAllUsers();
-    }
-
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@RequestHeader("X-User-Id") Long userId, @RequestHeader("X-User-Role") String role, @PathVariable("id") Long deleteId) {
