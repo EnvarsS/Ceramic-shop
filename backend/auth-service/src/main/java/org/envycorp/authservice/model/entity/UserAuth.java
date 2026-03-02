@@ -17,6 +17,7 @@ public class UserAuth {
 
     private String username;
     private String passwordHash;
+    private String email;
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
 }

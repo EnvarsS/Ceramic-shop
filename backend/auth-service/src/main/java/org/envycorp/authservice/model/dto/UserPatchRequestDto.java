@@ -1,16 +1,14 @@
 package org.envycorp.authservice.model.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UserAuthRequestDto {
-    @NotBlank
+public class UserPatchRequestDto {
     private String username;
-    @NotBlank
+    private String email;
     private String password;
 }
