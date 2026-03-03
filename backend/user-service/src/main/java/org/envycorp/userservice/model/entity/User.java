@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "users")
 @AllArgsConstructor
@@ -11,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -20,8 +23,11 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private String password;
+    private String address;
 
-    @ManyToOne
-    private Role role;
+    private LocalDate birthDate;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
 }

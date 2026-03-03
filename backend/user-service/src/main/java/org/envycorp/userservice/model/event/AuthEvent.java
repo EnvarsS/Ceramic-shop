@@ -1,13 +1,14 @@
-package org.envycorp.userservice.model.dto.response;
+package org.envycorp.userservice.model.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class RoleResponseDto {
+public class AuthEvent {
     private Long id;
-    private String name;
+    private String username;
+    private String email;
 }
