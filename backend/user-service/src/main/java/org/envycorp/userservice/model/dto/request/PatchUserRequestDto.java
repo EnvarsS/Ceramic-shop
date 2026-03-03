@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PatchUserRequestDto {
-    private String username;
-    private String password;
-    private String email;
+    private String address;
+    private String birthDate;
 }
