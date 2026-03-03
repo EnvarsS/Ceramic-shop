@@ -1,8 +1,7 @@
 package org.envycorp.userservice.controller;
 
-import org.envycorp.userservice.exception.user.EmailIsAlreadyTakenException;
-import org.envycorp.userservice.exception.user.InvalidUserLoginDataException;
-import org.envycorp.userservice.exception.user.UsernameIsAlreadyTakenException;
+import org.envycorp.userservice.exception.user.NoPermissionException;
+import org.envycorp.userservice.exception.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,9 +14,8 @@ import java.util.Map;
 @ControllerAdvice
 public class ServiceExceptionHandler {
     @ExceptionHandler({
-            EmailIsAlreadyTakenException.class,
-            UsernameIsAlreadyTakenException.class,
-            InvalidUserLoginDataException.class,
+            NoPermissionException.class,
+            UserNotFoundException.class
     })
     public ResponseEntity<String> handleDataAlreadyTaken(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
