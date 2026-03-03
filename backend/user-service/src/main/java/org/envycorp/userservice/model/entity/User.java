@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity(name = "users")
 @AllArgsConstructor
@@ -20,8 +23,12 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private String password;
+    private Long authId;
 
-    @ManyToOne
-    private Role role;
+    private String address;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
 }

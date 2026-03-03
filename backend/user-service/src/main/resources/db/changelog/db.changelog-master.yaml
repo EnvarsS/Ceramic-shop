@@ -2,8 +2,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/001-init-role-create-table.sql
   - include:
-      file: db/changelog/changes/002-init-users-create-table.sql
+      file: db/changelog/changes/001-init-users-create-table.sql
   - include:
       file: db/changelog/changes/003-init-roles-insert.sql
   - include:
-        file: db/changelog/changes/004-init-users-insert.sql
+        file: db/changelog/changes/002-init-users-insert.sql

@@ -9,7 +9,6 @@ import org.envycorp.userservice.model.dto.request.AuthUserRequestDto;
 import org.envycorp.userservice.model.dto.request.CreateUserRequestDto;
 import org.envycorp.userservice.model.dto.request.PatchUserRequestDto;
 import org.envycorp.userservice.model.dto.response.UserResponseDto;
-import org.envycorp.userservice.model.entity.Role;
 import org.envycorp.userservice.model.entity.User;
 import org.envycorp.userservice.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -23,7 +22,6 @@ import java.util.List;
 public class UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-    private final RoleService roleService;
 
     @Transactional
     public UserResponseDto createUser(CreateUserRequestDto createUser) {
@@ -31,16 +29,12 @@ public class UserService {
         isUsernameTaken(createUser.getUsername());
 
         User newUser = modelMapper.map(createUser, User.class);
-        newUser.setRole(roleService.getUserRole());
 
         return modelMapper.map(userRepository.save(newUser), UserResponseDto.class);
     }
 
     public UserResponseDto login(AuthUserRequestDto reqUser) {
         User user = userRepository.findByUsername(reqUser.getUsername());
-        if (user == null || !user.getPassword().equals(reqUser.getPassword())) {
-            throw new InvalidUserLoginDataException("Invalid username or password");
-        }
 
         return modelMapper.map(user, UserResponseDto.class);
     }
@@ -72,10 +66,6 @@ public class UserService {
             existingUser.setUsername(user.getUsername());
         }
 
-        if (user.getPassword() != null) {
-            existingUser.setPassword(user.getPassword());
-        }
-
         return modelMapper.map(userRepository.save(existingUser), UserResponseDto.class);
     }
 
@@ -90,12 +80,10 @@ public class UserService {
 
     @Transactional
     public UserResponseDto changeUserRole(Long id, Long roleId) {
-        Role role = roleService.findRoleById(roleId);
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        user.setRole(role);
         return modelMapper.map(userRepository.save(user), UserResponseDto.class);
     }
 

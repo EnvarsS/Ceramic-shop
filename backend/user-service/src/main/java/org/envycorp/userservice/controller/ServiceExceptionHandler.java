@@ -1,7 +1,5 @@
 package org.envycorp.userservice.controller;
 
-import org.envycorp.userservice.exception.role.RoleIsAlreadyExisted;
-import org.envycorp.userservice.exception.role.RoleNotFoundException;
 import org.envycorp.userservice.exception.user.EmailIsAlreadyTakenException;
 import org.envycorp.userservice.exception.user.InvalidUserLoginDataException;
 import org.envycorp.userservice.exception.user.UsernameIsAlreadyTakenException;
@@ -20,8 +18,6 @@ public class ServiceExceptionHandler {
             EmailIsAlreadyTakenException.class,
             UsernameIsAlreadyTakenException.class,
             InvalidUserLoginDataException.class,
-            RoleNotFoundException.class,
-            RoleIsAlreadyExisted.class
     })
     public ResponseEntity<String> handleDataAlreadyTaken(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
