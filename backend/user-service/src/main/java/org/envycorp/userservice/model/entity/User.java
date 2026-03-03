@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "users")
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -23,11 +23,10 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private Long authId;
-
     private String address;
 
-    @Column(name = "created_at")
+    private LocalDate birthDate;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
