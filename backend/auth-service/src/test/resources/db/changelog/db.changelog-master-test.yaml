@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/001-create-roles-table-test.sql
+  - include:
+      file: db/changelog/changes/002-create-authuser-table-test.sql
+  - include:
+      file: db/changelog/changes/003-init-roles-insert-test.sql
+  - include:
+      file: db/changelog/changes/004-init-users-auth-insert-test.sql
+  - include:
+      file: db/changelog/changes/005-reset-sequence-h2.sql
