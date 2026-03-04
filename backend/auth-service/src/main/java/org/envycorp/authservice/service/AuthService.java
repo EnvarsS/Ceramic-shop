@@ -15,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -26,17 +24,6 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final KafkaProducerService kafkaProducerService;
-
-    @PostConstruct
-    public void changePasswords() {
-        List<UserAuth> users = authRepository.findAll();
-
-        for (UserAuth user : users) {
-            String hashedPassword = bCryptPasswordEncoder.encode(user.getPasswordHash());
-            user.setPasswordHash(hashedPassword);
-            authRepository.save(user);
-        }
-    }
 
     @Transactional
     public String register(UserRegisterRequestDto user) {
@@ -81,14 +68,14 @@ public class AuthService {
             authEvent.setId(deleteId);
             kafkaProducerService.publishUserDeleted(authEvent);
         } else {
-            throw new NoPermissionError("You don't have permission to delete this user");
+            throw new NoPermissionException("You don't have permission to delete this user");
         }
     }
 
     @Transactional
     public void updateUser(Long userId, String role, Long updateId, UserPatchRequestDto dto) {
         if (!userId.equals(updateId) && !role.equals("ROLE_ADMIN")) {
-            throw new NoPermissionError("You don't have permission to update this user");
+            throw new NoPermissionException("You don't have permission to update this user");
         }
 
         UserAuth existingUser = authRepository.findById(updateId)
