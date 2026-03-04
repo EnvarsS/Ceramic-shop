@@ -26,10 +26,10 @@ public class ServiceExceptionHandler {
             IncorrectPasswordException.class,
             UsernameIsAlreadyTaken.class,
             UsernameNotExists.class,
-            NoPermissionError.class,
+            NoPermissionException.class,
             EmailIsAlreadyTaken.class,
             UserNotFoundException.class,
-            NoPermissionError.class
+            NoPermissionException.class
     })
     public ResponseEntity<Map<String, String>> handleCustomExceptions(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
