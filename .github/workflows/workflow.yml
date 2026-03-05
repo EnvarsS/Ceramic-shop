@@ -36,7 +36,7 @@ jobs:
     needs: integration-tests
     strategy:
       matrix:
-        service: [user-service, discovery-service, auth-service, api-gateway]
+        service: [user-service, discovery-service, auth-service, api-gateway, product-service]
     defaults:
       run:
         working-directory: backend/${{ matrix.service }}
