@@ -26,6 +26,17 @@ services:
     volumes:
       - auth-db-data:/var/lib/mysql
 
+  product-db:
+    image: mysql:latest
+    container_name: ceramic-product-db
+    environment:
+        MYSQL_ROOT_PASSWORD: product_pass
+        MYSQL_DATABASE: product_db
+        MYSQL_USER: product_user
+        MYSQL_PASSWORD: product_pass
+    volumes:
+      - product-db-data:/var/lib/mysql
+
   user-service:
     depends_on:
       - user-db
@@ -85,3 +96,4 @@ services:
 volumes:
   user-db-data:
   auth-db-data:
+  product-db-data:
