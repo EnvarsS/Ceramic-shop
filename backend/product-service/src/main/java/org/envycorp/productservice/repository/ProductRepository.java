@@ -20,4 +20,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("originalQuery") String originalQuery,
             @Param("fuzzyQuery") String fuzzyQuery,
             Pageable pageable);
+
+    boolean existsByName(String name);
 }
