@@ -8,8 +8,6 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: user_db
-    ports:
-      - "5432:5432"
     volumes:
       - user-db-data:/var/lib/postgresql/data
 
@@ -17,12 +15,10 @@ services:
     image: mysql:latest
     container_name: ceramic-auth-db
     environment:
-        MYSQL_ROOT_PASSWORD: auth_pass
-        MYSQL_DATABASE: auth_db
-        MYSQL_USER: auth_user
-        MYSQL_PASSWORD: auth_pass
-    ports:
-      - "3306:3306"
+      MYSQL_ROOT_PASSWORD: auth_pass
+      MYSQL_DATABASE: auth_db
+      MYSQL_USER: auth_user
+      MYSQL_PASSWORD: auth_pass
     volumes:
       - auth-db-data:/var/lib/mysql
 
@@ -30,10 +26,10 @@ services:
     image: mysql:latest
     container_name: ceramic-product-db
     environment:
-        MYSQL_ROOT_PASSWORD: product_pass
-        MYSQL_DATABASE: product_db
-        MYSQL_USER: product_user
-        MYSQL_PASSWORD: product_pass
+      MYSQL_ROOT_PASSWORD: product_pass
+      MYSQL_DATABASE: product_db
+      MYSQL_USER: product_user
+      MYSQL_PASSWORD: product_pass
     volumes:
       - product-db-data:/var/lib/mysql
 
@@ -92,6 +88,22 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://api-gateway:4020
+    depends_on:
+      - api-gateway
+    networks:
+      - ceramic-network
+
+networks:
+  ceramic-network:
+    driver: bridge
 
 volumes:
   user-db-data:
