@@ -1,5 +1,6 @@
 package org.envycorp.productservice.model.dto.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,6 @@ public class PatchProductRequestDto {
 
     private String description;
 
-    @Size(min = 1)
+    @Min(value = 0, message = "Price must be positive")
     private BigDecimal price;
 }
