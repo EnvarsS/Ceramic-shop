@@ -40,6 +40,13 @@ public class ProductService {
                 .map(pr -> modelMapper.map(pr, ProductResponseDto.class));
     }
 
+    public ProductResponseDto getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotExistException("Product with id " + id + " is not existed"));
+
+        return modelMapper.map(product, ProductResponseDto.class);
+    }
+
     @Transactional
     public void createProduct(CreateProductRequestDto createProductRequestDto) {
         if (productRepository.existsByName(createProductRequestDto.getName()))
