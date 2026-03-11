@@ -8,6 +8,7 @@ import org.envycorp.productservice.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,16 +27,21 @@ public class ProductController {
             return productService.getProducts(page);
     }
 
+    @GetMapping("/public/{id}")
+    public ProductResponseDto getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody CreateProductRequestDto createProductRequestDto) {
+    public void createProduct(@Validated @RequestBody CreateProductRequestDto createProductRequestDto) {
         productService.createProduct(createProductRequestDto);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponseDto patchProduct(@PathVariable Long id, @RequestBody PatchProductRequestDto patchProductRequestDto) {
+    public ProductResponseDto patchProduct(@PathVariable Long id, @Validated @RequestBody PatchProductRequestDto patchProductRequestDto) {
         return productService.patchProduct(id, patchProductRequestDto);
     }
 

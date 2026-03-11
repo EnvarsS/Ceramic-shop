@@ -4,4 +4,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/002-init-product-data.sql
   - include:
-    file: db/changelog/changes/003-enable-FULLTEXT-index.sql
+     file: db/changelog/changes/003-enable-FULLTEXT-index.sql
