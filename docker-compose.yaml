@@ -54,6 +54,14 @@ services:
     build: /backend/discovery-service
     container_name: discovery-service
 
+  product-service:
+    depends_on:
+      - product-db
+      - discovery-service
+    restart: always
+    build: /backend/product-service
+    container_name: product-service
+
   api-gateway:
     depends_on:
       - discovery-service
@@ -87,19 +95,6 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      NEXT_PUBLIC_API_URL: http://api-gateway:4020
-    depends_on:
-      - api-gateway
-    networks:
-      - ceramic-network
 
 networks:
   ceramic-network:
