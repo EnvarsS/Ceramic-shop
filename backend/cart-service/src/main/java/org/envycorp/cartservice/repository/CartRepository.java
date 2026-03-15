@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface CartRepository extends JpaRepository<Cart,Long> {
 
-    Optional<Cart> findCartByCustomerIdLazy(Long customerId);
+    Optional<Cart> findCartByCustomerId(Long customerId);
 
     @Query("SELECT c FROM Cart c JOIN FETCH c.cartItems WHERE c.customerId = :customerId")
     Optional<Cart> findCartByCustomerIdEager(Long customerId);

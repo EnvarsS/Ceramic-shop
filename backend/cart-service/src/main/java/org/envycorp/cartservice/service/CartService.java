@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class CartService {
@@ -25,13 +27,14 @@ public class CartService {
         Cart cart = getOrCreateCartLazy(customerId);
 
         cart.getCartItems().stream()
-                .filter(item -> item.getProductId() == cartItem.getProductId())
+                .filter(item -> Objects.equals(item.getProductId(), cartItem.getProductId()))
                 .findFirst()
                 .ifPresentOrElse(item -> item.setQuantity(item.getQuantity() + cartItem.getQuantity()),
                         () -> {
                             CartItem item = new CartItem();
                             item.setProductId(cartItem.getProductId());
                             item.setQuantity(cartItem.getQuantity());
+                            item.setCart(cart);
                             cart.getCartItems().add(item);
                         });
 
@@ -40,12 +43,12 @@ public class CartService {
 
     public CartResponseDto removeItem(Long customerId, Long productId) {
         Cart cart = getOrCreateCartLazy(customerId);
-        cart.getCartItems().removeIf(item -> item.getProductId() == productId);
+        cart.getCartItems().removeIf(item -> Objects.equals(item.getProductId(), productId));
         return modelMapper.map(cartRepository.save(cart), CartResponseDto.class);
     }
 
     public void clearCart(Long customerId){
-        cartRepository.findCartByCustomerIdLazy(customerId)
+        cartRepository.findCartByCustomerId(customerId)
                 .ifPresent(cart -> {
                     cart.getCartItems().clear();
                     cartRepository.save(cart);
@@ -62,7 +65,7 @@ public class CartService {
     }
 
     private Cart getOrCreateCartLazy(Long customerId) {
-        return cartRepository.findCartByCustomerIdLazy(customerId)
+        return cartRepository.findCartByCustomerId(customerId)
                 .orElseGet(() -> {
                     Cart cart = new Cart();
                     cart.setCustomerId(customerId);
