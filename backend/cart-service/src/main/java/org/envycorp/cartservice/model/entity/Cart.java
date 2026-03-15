@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "carts")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -20,6 +21,6 @@ public class Cart {
     @Column(nullable = false, unique = true)
     private Long customerId;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems = new ArrayList<>();;
 }
