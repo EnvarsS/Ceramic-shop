@@ -1,8 +1,8 @@
 package org.envycorp.orderservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.envycorp.orderservice.exception.OrderIsNotExisted;
 import org.envycorp.orderservice.exception.WrongOrderIdException;
-import org.envycorp.orderservice.model.dto.response.OrderItemResponseDto;
 import org.envycorp.orderservice.model.dto.response.OrderResponseDto;
 import org.envycorp.orderservice.model.entity.Order;
 import org.envycorp.orderservice.repository.OrderRepository;
@@ -27,7 +27,8 @@ public class OrderService {
     }
 
     public OrderResponseDto getOrderById(Long userId, Long id) {
-        Order order = orderRepository.getOrderByUserId(id);
+        Order order = orderRepository.getOrderByUserId(id)
+                .orElseThrow(() -> new OrderIsNotExisted("Order with id " + id + "isn't exist"));
 
         if(!order.getUserId().equals(userId))
             throw new WrongOrderIdException("Wrong Order Id");
