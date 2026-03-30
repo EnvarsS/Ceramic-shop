@@ -14,12 +14,22 @@ public class CartController {
 
     @GetMapping
     public CartResponseDto getCart(@RequestHeader("X-User-Id") Long customerId) {
+        System.out.println(customerId);
         return cartService.getCart(customerId);
     }
 
-    @PatchMapping("/item/{productId}")
+    @PatchMapping("/item/{productId}/increase")
     @ResponseStatus(HttpStatus.OK)
     public CartResponseDto increaseCartItemQuantity(
+            @RequestHeader("X-User-Id") Long customerId,
+            @PathVariable Long productId
+    ){
+        return cartService.increaseCartItemQuantity(customerId, productId);
+    }
+
+    @PatchMapping("/item/{productId}/decrease")
+    @ResponseStatus(HttpStatus.OK)
+    public CartResponseDto decreaseCartItemQuantity(
             @RequestHeader("X-User-Id") Long customerId,
             @PathVariable Long productId
     ){

@@ -2,7 +2,6 @@ package org.envycorp.cartservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.envycorp.cartservice.exception.NoSuchItemException;
-import org.envycorp.cartservice.model.dto.request.AddCartItemRequestDto;
 import org.envycorp.cartservice.model.dto.response.CartResponseDto;
 import org.envycorp.cartservice.model.entity.Cart;
 import org.envycorp.cartservice.model.entity.CartItem;
@@ -21,11 +20,13 @@ public class CartService {
     private final ModelMapper modelMapper;
 
     public CartResponseDto getCart(Long customerId) {
+        Cart cart = getOrCreateCartEager(customerId);
+        System.out.println(cart.getCartItems().size());
         return modelMapper.map(getOrCreateCartEager(customerId), CartResponseDto.class);
     }
 
     @Transactional
-    public CartResponseDto addItem(CartProductEvent cartProductEvent) {
+    public void addItem(CartProductEvent cartProductEvent) {
         Cart cart = getOrCreateCartLazy(cartProductEvent.userId());
 
         cart.getCartItems().stream()
@@ -39,8 +40,6 @@ public class CartService {
                             item.setCart(cart);
                             cart.getCartItems().add(item);
                         });
-
-        return modelMapper.map(cartRepository.save(cart), CartResponseDto.class);
     }
 
     @Transactional
@@ -68,6 +67,20 @@ public class CartService {
                 .orElseThrow(() -> new NoSuchItemException("Item with product id " + productId + " is not in the cart"));
 
         item.setQuantity(item.getQuantity() + 1);
+        cartRepository.save(cart);
+
+        return modelMapper.map(cartRepository.save(cart), CartResponseDto.class);
+    }
+
+    @Transactional
+        public CartResponseDto decreaseCartItemQuantity(Long customerId, Long productId) {
+        Cart cart = getOrCreateCartLazy(customerId);
+        CartItem item = cart.getCartItems().stream()
+                .filter(i -> Objects.equals(i.getProductId(), productId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchItemException("Item with product id " + productId + " is not in the cart"));
+
+        item.setQuantity(item.getQuantity() - 1);
         cartRepository.save(cart);
 
         return modelMapper.map(cartRepository.save(cart), CartResponseDto.class);
