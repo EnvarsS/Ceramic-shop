@@ -51,4 +51,11 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
+
+    @PostMapping("/cart/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addProductToCart(@RequestHeader("X-User-Id") Long userId, @PathVariable Long id) {
+        productService.addProductToCart(userId, id);
+    }
+
 }

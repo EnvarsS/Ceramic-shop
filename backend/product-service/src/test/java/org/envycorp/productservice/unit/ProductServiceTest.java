@@ -7,6 +7,7 @@ import org.envycorp.productservice.model.dto.request.PatchProductRequestDto;
 import org.envycorp.productservice.model.dto.response.ProductResponseDto;
 import org.envycorp.productservice.model.entity.Product;
 import org.envycorp.productservice.repository.ProductRepository;
+import org.envycorp.productservice.service.KafkaProducerService;
 import org.envycorp.productservice.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +38,11 @@ public class ProductServiceTest {
     @Mock
     ModelMapper modelMapper;
 
+    @Mock
+    KafkaProducerService kafkaProducer;
+
     @InjectMocks
     ProductService productService;
-
-    // ─── getProducts (no search) ────────────────────────────────────────────
 
     @Test
     void getProducts_shouldReturnEmptyPage_whenNoProducts() {
@@ -70,8 +72,6 @@ public class ProductServiceTest {
         assertEquals("Mug", result.getContent().get(0).getName());
         assertEquals("Plate", result.getContent().get(1).getName());
     }
-
-    // ─── getProducts (with search) ──────────────────────────────────────────
 
     @Test
     void getProducts_withSearch_shouldReturnEmptyPage_whenNoMatch() {
@@ -131,8 +131,6 @@ public class ProductServiceTest {
 
         verify(productRepository).save(product);
     }
-
-    // ─── patchProduct ───────────────────────────────────────────────────────
 
     @Test
     void patchProduct_shouldThrow_whenProductNotFound() {
@@ -222,12 +220,9 @@ public class ProductServiceTest {
 
         productService.patchProduct(1L, dto);
 
-        // setName should not be called since name is the same
         verify(productRepository).save(product);
         assertEquals("Mug", product.getName());
     }
-
-    // ─── deleteProduct ──────────────────────────────────────────────────────
 
     @Test
     void deleteProduct_shouldThrow_whenProductNotFound() {
@@ -246,8 +241,6 @@ public class ProductServiceTest {
 
         verify(productRepository).delete(product);
     }
-
-    // ─── Helpers ────────────────────────────────────────────────────────────
 
     private Product buildProduct(Long id, String name, String description, BigDecimal price, int quantity) {
         return new Product(id, name, description, price, quantity);

@@ -1,8 +1,6 @@
 package org.envycorp.cartservice.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.envycorp.cartservice.model.dto.request.AddCartItemRequestDto;
 import org.envycorp.cartservice.model.dto.response.CartResponseDto;
 import org.envycorp.cartservice.service.CartService;
 import org.springframework.http.HttpStatus;
@@ -19,12 +17,22 @@ public class CartController {
         return cartService.getCart(customerId);
     }
 
-    @PostMapping("/item")
+    @PatchMapping("/item/{productId}/increase")
     @ResponseStatus(HttpStatus.OK)
-    public CartResponseDto addCartItem(
+    public CartResponseDto increaseCartItemQuantity(
             @RequestHeader("X-User-Id") Long customerId,
-            @RequestBody @Valid AddCartItemRequestDto addCartItemRequestDto) {
-        return cartService.addItem(customerId, addCartItemRequestDto);
+            @PathVariable Long productId
+    ){
+        return cartService.increaseCartItemQuantity(customerId, productId);
+    }
+
+    @PatchMapping("/item/{productId}/decrease")
+    @ResponseStatus(HttpStatus.OK)
+    public CartResponseDto decreaseCartItemQuantity(
+            @RequestHeader("X-User-Id") Long customerId,
+            @PathVariable Long productId
+    ){
+        return cartService.decreaseCartItemQuantity(customerId, productId);
     }
 
     @DeleteMapping("/item/{productId}")
@@ -41,7 +49,4 @@ public class CartController {
     public void deleteCart(@RequestHeader("X-User-Id") Long customerId){
         cartService.clearCart(customerId);
     }
-
-
-
 }
