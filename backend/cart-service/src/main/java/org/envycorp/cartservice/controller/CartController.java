@@ -14,7 +14,6 @@ public class CartController {
 
     @GetMapping
     public CartResponseDto getCart(@RequestHeader("X-User-Id") Long customerId) {
-        System.out.println(customerId);
         return cartService.getCart(customerId);
     }
 

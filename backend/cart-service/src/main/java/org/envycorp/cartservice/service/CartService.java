@@ -20,8 +20,6 @@ public class CartService {
     private final ModelMapper modelMapper;
 
     public CartResponseDto getCart(Long customerId) {
-        Cart cart = getOrCreateCartEager(customerId);
-        System.out.println(cart.getCartItems().size());
         return modelMapper.map(getOrCreateCartEager(customerId), CartResponseDto.class);
     }
 
