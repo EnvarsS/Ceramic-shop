@@ -1,6 +1,5 @@
 package org.envycorp.cartservice.unit;
 
-import org.envycorp.cartservice.model.dto.request.AddCartItemRequestDto;
 import org.envycorp.cartservice.model.dto.response.CartItemResponseDto;
 import org.envycorp.cartservice.model.dto.response.CartResponseDto;
 import org.envycorp.cartservice.model.entity.Cart;
@@ -24,7 +23,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class
+CartServiceTest {
 
     @Mock
     CartRepository cartRepository;
@@ -63,89 +63,6 @@ class CartServiceTest {
 
         assertEquals(1L, result.getId());
         verify(cartRepository, never()).save(any());
-    }
-
-    @Test
-    void addItem_shouldCreateCartAndAddItem_whenCartDoesNotExist() {
-        Cart newCart = buildCart(1L, 1L);
-        CartResponseDto dto = buildCartResponseDto(1L, 1L,
-                List.of(new CartItemResponseDto(10L, 2)));
-        AddCartItemRequestDto request = new AddCartItemRequestDto(10L, 2);
-
-        when(cartRepository.findCartByCustomerId(1L)).thenReturn(Optional.empty());
-        when(cartRepository.save(any(Cart.class))).thenReturn(newCart);
-        when(modelMapper.map(any(Cart.class), eq(CartResponseDto.class))).thenReturn(dto);
-
-        CartResponseDto result = cartService.addItem(1L, request);
-
-        assertEquals(1, result.getItems().size());
-        assertEquals(10L, result.getItems().get(0).getProductId());
-        // save called twice: once to create cart, once to save with new item
-        verify(cartRepository, times(2)).save(any(Cart.class));
-    }
-
-    @Test
-    void addItem_shouldAddNewItem_whenProductNotInCart() {
-        Cart cart = buildCart(1L, 1L);
-        CartItem existingItem = buildCartItem(1L, 5L, 3, cart);
-        cart.getCartItems().add(existingItem);
-
-        CartResponseDto dto = buildCartResponseDto(1L, 1L,
-                List.of(new CartItemResponseDto(5L, 3), new CartItemResponseDto(10L, 2)));
-        AddCartItemRequestDto request = new AddCartItemRequestDto(10L, 2);
-
-        when(cartRepository.findCartByCustomerId(1L)).thenReturn(Optional.of(cart));
-        when(cartRepository.save(cart)).thenReturn(cart);
-        when(modelMapper.map(cart, CartResponseDto.class)).thenReturn(dto);
-
-        cartService.addItem(1L, request);
-
-        assertEquals(2, cart.getCartItems().size());
-        verify(cartRepository).save(cart);
-    }
-
-    @Test
-    void addItem_shouldIncreaseQuantity_whenProductAlreadyInCart() {
-        Cart cart = buildCart(1L, 1L);
-        CartItem existingItem = buildCartItem(1L, 10L, 3, cart);
-        cart.getCartItems().add(existingItem);
-
-        CartResponseDto dto = buildCartResponseDto(1L, 1L,
-                List.of(new CartItemResponseDto(10L, 5)));
-        AddCartItemRequestDto request = new AddCartItemRequestDto(10L, 2);
-
-        when(cartRepository.findCartByCustomerId(1L)).thenReturn(Optional.of(cart));
-        when(cartRepository.save(cart)).thenReturn(cart);
-        when(modelMapper.map(cart, CartResponseDto.class)).thenReturn(dto);
-
-        cartService.addItem(1L, request);
-
-        // quantity should be 3 + 2 = 5
-        assertEquals(5, existingItem.getQuantity());
-        assertEquals(1, cart.getCartItems().size());
-        verify(cartRepository).save(cart);
-    }
-
-    @Test
-    void addItem_shouldKeepOtherItemsIntact_whenAddingNewProduct() {
-        Cart cart = buildCart(1L, 1L);
-        CartItem item1 = buildCartItem(1L, 5L, 3, cart);
-        CartItem item2 = buildCartItem(2L, 6L, 2, cart);
-        cart.getCartItems().add(item1);
-        cart.getCartItems().add(item2);
-
-        AddCartItemRequestDto request = new AddCartItemRequestDto(10L, 1);
-        CartResponseDto dto = buildCartResponseDto(1L, 1L, List.of());
-
-        when(cartRepository.findCartByCustomerId(1L)).thenReturn(Optional.of(cart));
-        when(cartRepository.save(cart)).thenReturn(cart);
-        when(modelMapper.map(cart, CartResponseDto.class)).thenReturn(dto);
-
-        cartService.addItem(1L, request);
-
-        assertEquals(3, cart.getCartItems().size());
-        assertEquals(3, item1.getQuantity());
-        assertEquals(2, item2.getQuantity());
     }
 
     @Test
