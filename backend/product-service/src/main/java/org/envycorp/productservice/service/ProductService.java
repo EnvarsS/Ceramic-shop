@@ -7,6 +7,7 @@ import org.envycorp.productservice.model.dto.request.CreateProductRequestDto;
 import org.envycorp.productservice.model.dto.request.PatchProductRequestDto;
 import org.envycorp.productservice.model.dto.response.ProductResponseDto;
 import org.envycorp.productservice.model.entity.Product;
+import org.envycorp.productservice.model.event.CartProductEvent;
 import org.envycorp.productservice.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+    private final KafkaProducerService kafkaProducer;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
     private final static int PAGE_SIZE = 10;
@@ -80,5 +82,18 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotExistException("Product not exists"));
 
         productRepository.delete(product);
+    }
+
+    public void addProductToCart(Long userId, Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotExistException("Product with id " + id + " is not existed"));
+
+        CartProductEvent event = new CartProductEvent(
+                userId,
+                product.getId(),
+                product.getPrice()
+        );
+
+        kafkaProducer.sendProductToCart(event);
     }
 }
