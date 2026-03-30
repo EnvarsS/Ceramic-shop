@@ -33,7 +33,7 @@ public class CartController {
             @RequestHeader("X-User-Id") Long customerId,
             @PathVariable Long productId
     ){
-        return cartService.increaseCartItemQuantity(customerId, productId);
+        return cartService.decreaseCartItemQuantity(customerId, productId);
     }
 
     @DeleteMapping("/item/{productId}")
